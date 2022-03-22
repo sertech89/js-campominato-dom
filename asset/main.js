@@ -1,108 +1,122 @@
-// Griglia Campo Minato
 
-// Generare una griglia di gioco quadrata, simile a quella dello screenshot, 
-// in cui ogni cella contiene un numero tra 1 e 100.
-
-// Quando l'utente clicca su ogni cella, la cella cliccata si colora di azzurro.
-
-
-
-
-// seleziono l'id GRID dall'html e gli do una variabile let
-let grid = document.getElementById('grid');
-
-let select = document.getElementById('scelte');
-
+// selezioniamo il bottone dall html
 let btn = document.getElementById('btn');
 
+
+// selezioniamo la select dall html
+let select = document.getElementById('scelte');
+
+
+// selezioniamo la griglia dall html
+let grid = document.getElementById('grid');
+
+
+// creazione del box interno alla griglia
+let box = document.createElement('div');
+
+
+// array di numeri casuali da 1 a 100
+let array = [];
+
+
+// array per le bombe
+let arrayBombe = [];
+
+
+// array 16 bombe
+let sediciBombe = [];
+
+
+// al click del bottone vogliamo cambiare la griglia in base alla difficoltà
 btn.addEventListener('click', function () {
 
-        grid.innerHTML = '';
-
-        if (select.value === `diff_uno`) {
-
+    // reset del contenuto interno della griglia per nuova partita 
+    grid.innerHTML = '';
 
 
-            // creo CICLO FOR per svilupare i box interni alla griglia
-            for (let i = 1; i <= 100; i++) {
 
-                // creo una variabile box inserendoci dentro un elemento div creato
-                let box = document.createElement('div');
+    // a seconda del value della select, imposto il numero di celle
+    let numeroCelle;
 
-                // aggiungo il testo dei numeri in senso continuo, non random
-                box.innerHTML += i;
+    if (select.value == "diff_uno") {
+        numeroCelle = 100;
+    } else if (select.value == "diff_due") {
+        numeroCelle = 81;
+    } else {
+        numeroCelle = 49;
+    }
 
-                // aggiungo una classe al div con dentro BOX
-                box.classList.add('box_1');
 
-                // incolliamo let box e il suo contenuto all'interno del div con id=grid in html
-                grid.appendChild(box);
 
-                // funzione al click
-                box.addEventListener('click', function () {
-                    console.log(this);
-                    this.classList.add('clicked');
-                    console.log(this.innerHTML);
-                    let numero = this.innerHTML;
-                });
-            }
+    // creazione ciclo for per numeri random
+    for (y = 1; y < numeroCelle + 1; y++) {
+        array.push(y);
+    }
 
-        } else if (select.value === `diff_due`) {
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
 
-            // creo ciclo for per svilupare i box interni alla griglia
-            for (let i = 1; i <= 81; i++) {
+    array = shuffle(array);
+    console.log(array);
 
-                // creo una variabile box inserendoci dentro un elemento div creato
-                let box = document.createElement('div');
 
-                // aggiungo il testo dei numeri in senso continuo, non random
-                box.innerHTML += i;
 
-                // aggiungo una classe al div con dentro box
-                box.classList.add('box_2');
+    // generare le bombe in base alla difficoltà
+    
+    // le bombe saranno sempre 16
+    for (k = 0; k < numeroCelle; k++) {
+        arrayBombe.push(k);
+    }
 
-                // incolliamo let box e il suo contenuto all'interno del div con id=grid in html
-                grid.appendChild(box);
+    console.log(`le bombe sono: ${ arrayBombe }`);
+    arrayBombe = shuffle(arrayBombe);
+    console.log(`le bombe sono: ${ arrayBombe }`);
 
-                // funzione al click
-                box.addEventListener('click', function () {
-                    console.log(this);
-                    this.classList.add('clicked');
-                    console.log(this.innerHTML);
-                    let numero = this.innerHTML;
-                });
+    for (bombe = 0; bombe < 16; bombe++) {
+        sediciBombe.push(arrayBombe[bombe]);
+    }
 
-            }
+    console.log(`le bombe sono: ${ sediciBombe }`);
 
-        } else if (select.value === `diff_tre`) {
 
-            // creo ciclo for per svilupare i box interni alla griglia
-            for (let i = 1; i <= 49; i++) {
 
-                // creo una variabile box inserendoci dentro un elemento div creato
-                let box = document.createElement('div');
+    // creo ciclo for per svilupare i box interni alla griglia
+    for (let i = 0; i < numeroCelle; i++) {
 
-                // aggiungo il testo dei numeri in senso continuo, non random
-                box.innerHTML += i;
+        let grid = document.getElementById('grid');
 
-                // aggiungo una classe al div con dentro box
-                box.classList.add('box_3');
+        let box = document.createElement('div');
 
-                // incolliamo let box e il suo contenuto all'interno del div con id=grid in html
-                grid.appendChild(box);
+        // incolliamo let box e il suo contenuto all'interno del div con id=grid in html
+        grid.appendChild(box);
 
-                // funzione al click
-                box.addEventListener('click', function () {
-                    console.log(this);
-                    this.classList.add('clicked');
-                    console.log(this.innerHTML);
-                    let numero = this.innerHTML;
-                });
-
-            }
-
+        // aggiungo la class box_X in base al numero di celle
+        if (numeroCelle == 100) {
+            box.classList.add('box_1')
+        } else if (numeroCelle == 81) {
+            box.classList.add('box_2')
+        } else {
+            box.classList.add('box_3')
         }
+
+        // aggiungo il testo dei numeri in senso continuo, non random
+        box.innerHTML = `<span>${array[i]}</span>`;
+
+        // funzione al click
+        box.addEventListener('click', function () {
+
+            console.log(this.innerHTML);
+
+            if (sediciBombe.includes(parseInt(this.innerText))) {
+                this.classList.add('bomba');
+                alert(`u Loooose!`);
+            } else {
+                this.classList.add('clicked');
+            }
+
+        });
 
     }
 
-)
+});

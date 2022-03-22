@@ -79,6 +79,11 @@ h1 {
     align-items: center;
 }
 
+#btn{
+    background-color: gold;
+    color: hotpink;
+}
+
 .clicked {
     background-color: #6495ed;
     color:white;
